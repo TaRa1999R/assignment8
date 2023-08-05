@@ -1,7 +1,7 @@
 print (" TRANSLATOR ")
 
-
-
+from colorama import Fore
+import gtts
 
 def read_from_file () :
     global WORDS_BANK
@@ -9,10 +9,106 @@ def read_from_file () :
     f = open ("translate.txt", "r")
     WORDS_BANK = []
 
-    for line in f :
-        word = line.split("\n")
-    
+    file = f.read ()
+    words = file.split ( "\n" )
+    for i in range ( 0 , len(words) , 2 ) :
+        dictionary = { "en" : words [i] , "fa" : words [i + 1]}
+        WORDS_BANK.append ( dictionary )
+
     f.close ()
 
+
+def show_menue () :
+    print ("")
+    print ("                 menue                   ")
+    print (" print 1 to translate english to persian ")
+    print (" print 2 to translate persian to english ")
+    print (" print 3 to add a new word to words bank ")
+    print (" print 4 to exit ")
+    print ("")
+
+
+def english_to_persian () :
+    english = input (" Please enter your english text : ")
+    english_words = english.split (" ")
+    persian = ""
+    
+    for word in english_words :
+        for existence in WORDS_BANK :
+            if word == existence["en"] :
+                persian = persian + existence["fa"] + " "
+                break
+        
+        else :
+            persian = persian + word + " "
+
+    print ( Fore.CYAN , persian , Fore.RESET )
+
+
+def persian_to_english () :
+    persian = input (" Please enter your persian text in finglish writing : ")
+    persian_words = persian.split (" ")
+    english = ""
+
+    for word in persian_words :
+        for existence in WORDS_BANK :
+            if word == existence["fa"] :
+                english = english + existence["en"] + " "
+                break
+
+        else :
+            english = english + word + " "
+
+    
+    print ( Fore.CYAN , english , Fore.RESET )
+    voice = gtts.gTTS ( english , lang = "en" , slow = False )
+    voice.save ("f:/Python Projects/assignment8/voice.mp3")
+
+
+def add () :
+    english = input (" Please enter the word in enlish : ")
+    persian = input (" Please enter the word in persian : ")
+    for word in WORDS_BANK :
+        if word["en"] == english or word["fa"] == persian :
+            print (" We have this word in word bank ")
+            break
+
+    else :
+        print (" Thank you for adding new word too my word band ")
+        new_word = { "en" : english , "fa" : persian }
+        WORDS_BANK.append ( new_word )
+
+
+def save_to_file () :
+    f = open ("translate.txt" , "w")
+    for word in WORDS_BANK :
+        f.write ( word["en"] + "\n" )
+        f.write ( word["fa"] + "\n" )
+    
+    f.write ("\n")
+    f.close ()
+
+
+print (" Welcom to my translator ")  
 read_from_file ()
-print (WORDS_BANK)
+
+while True :
+    show_menue ()
+    user_choice = input (" Please enter what do you want to do : ")
+
+    if user_choice == "1" :
+        english_to_persian ()
+    
+    elif user_choice == "2" :
+        persian_to_english ()
+    
+    elif user_choice == "3" :
+        add ()
+    
+    elif user_choice == "4" :
+        save_to_file ()
+        exit (0)
+    
+    else :
+        print (" Your choice is invalid ")
+        print (" Please try again base on the menue ")
