@@ -90,6 +90,8 @@ def save_to_file () :
 
 
 print (" Welcom to my translator ")  
+print (Fore.BLUE , "!! Please use space after all words and punctuation when you are entering a text for translastion !! " , Fore.RESET )
+print (Fore.BLUE , "!! Please use an underline '_' between two part words !! " , Fore.RESET )
 read_from_file ()
 
 while True :
